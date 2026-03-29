@@ -11,6 +11,29 @@ app.secret_key = config.secret_key
 def index():
     return render_template("index.html")
 
+@app.route("/new_shift")
+def new_shift():
+    return render_template("new_shift.html")
+
+@app.route("/create_shift", methods={"POST"})
+def create_shift():
+    title = request.form["title"]
+    description = request.form["description"]
+    participants =  request.form["participants"]
+    employee_id = session.get("employee_id")
+
+    conn = sqlite3.connect("database.db")
+    c = conn.cursor()
+
+    sql = """INSERT INTO jobs (title, description, participants, employee_id) 
+                VALUES (?, ?, ?, ?)"""
+    c.execute(sql, [title, description, participants, employee_id ])
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/")
+
 @app.route("/register")
 def register():
     return render_template("register.html")
@@ -50,10 +73,13 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
     
-        sql = "SELECT password_hash FROM users WHERE username = ?"
-        password_hash = db.query(sql, [username])[0][0]
+        sql = "SELECT id, password_hash FROM users WHERE username = ?"
+        result = db.query(sql, [username])[0]
+        employee_id = result[0]
+        password_hash = result[1]
 
         if check_password_hash(password_hash, password):
+            session["employee_id"] = employee_id
             session["username"] = username
             return redirect("/")
         else:
@@ -61,5 +87,6 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["username"]
+    session.pop("employee_id", None)
+    session.pop("username", None)
     return redirect("/")

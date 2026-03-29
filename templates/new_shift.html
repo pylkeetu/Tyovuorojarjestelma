@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Uusi työvuoro</title>
+</head>
+
+<body>
+  <h1>Uusi työvuoro</h1>
+  <form action="/create_shift" method="post">
+    <p>
+      Otsikko: <br />
+      <input type="text" name="title" />
+    </p>
+    <p>
+      Kuvaus: <br />
+      <textarea name="description" rows="8" cols="60"></textarea>
+    </p>
+    <p>
+      Osallistujien määrä: <br />
+      <input type="int" name="participants" size="5" />
+    </p>
+    <input type="submit" value="Luo työvuoro" />
+  </form>
+</body>
+
+</html>
