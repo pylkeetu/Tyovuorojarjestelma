@@ -5,6 +5,15 @@
   <title>Uusi työvuoro</title>
 </head>
 
+<label>Kategoria:</label><br>
+
+<div style="height:100px; overflow-y:scroll; border:1px solid #ccc;">
+  {% for category in categories %}
+    <input type="checkbox" name="categories" value="{{ category.id }}">
+    {{ category.name }}<br>
+  {% endfor %}
+</div>
+
 <body>
   <h1>Uusi työvuoro</h1>
   <form action="/create_shift" method="post">

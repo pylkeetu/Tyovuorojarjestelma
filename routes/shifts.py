@@ -32,20 +32,34 @@ def show_shift(item_id):
 
 @shifts_bp.route("/new_shift")
 def new_shift():
-    return render_template("new_shift.html")
+    categories = db.query("SELECT * FROM categories").fetchall()
+    return render_template("new_shift.html", categories=categories)
 
 
 @shifts_bp.route("/create_shift", methods=["POST"])
 def create_shift():
+
+    if "employee_id" not in session:
+        return redirect("/login")
+
     title = request.form["title"]
     description = request.form["description"]
     participants = request.form["participants"]
-    employee_id = session.get("employee_id")
+    employee_id = session["employee_id"]
+    category_ids = request.form.getlist("categories")
 
-    db.execute(
+    result = db.execute(
         "INSERT INTO shifts (title, description, participants, employee_id) VALUES (?, ?, ?, ?)",
         [title, description, participants, employee_id]
     )
+
+    shift_id = result.lastrowid
+
+    for cid in category_ids:
+        db.execute(
+            "INSERT INTO shift_categories (shift_id, category_id) VALUES (?, ?)",
+            [shift_id, cid]
+        )
 
     return redirect("/")
 
@@ -83,6 +97,10 @@ def edit(item_id):
 
 @shifts_bp.route("/shift/<int:item_id>/delete", methods=["POST"])
 def delete(item_id):
+
+    if "employee_id" not in session:
+        return redirect("/login")
+
     result = db.query("SELECT employee_id FROM shifts WHERE id = ?", [item_id])
 
     if result[0][0] != session["employee_id"]:

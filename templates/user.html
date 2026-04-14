@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Käyttäjäsivu</title>
+</head>
+<body>
+
+<h2>Käyttäjän tilastot</h2>
+
+<p>Lisättyjä työvuoroja: {{ stats.count }}</p>
+<p>Osallistujien keskiarvo: {{ stats.avg_participants | round(1) }}</p>
+
+<h3>Työvuorot</h3>
+
+<ul>
+{% for shift in shifts %}
+  <li>
+    {{ shift.title }} ({{ shift.participants }} osallistujaa)
+  </li>
+{% endfor %}
+</ul>
+<a href="/">Palaa etusivulle</a>
+
+</body>
+</html>

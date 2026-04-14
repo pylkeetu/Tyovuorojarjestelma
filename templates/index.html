@@ -24,7 +24,10 @@
 
   {% if session.username %}
   <p>
-    Olet kirjautunut nimellä {{ session.username }}, olet työntekijä numero {{ session.employee_id }}
+    Olet kirjautunut nimellä {{ session.username }}, ID-numerosi on {{ session.employee_id }}
+  </p>
+  <br>
+    <a href="/user/{{ session.employee_id }}">Oma sivu</a>
   </p>
   {% endif %}
 
@@ -44,6 +47,8 @@
   {% endif %}
 
   <h2>Työvuorot</h2>
+
+  {% if session.username %}
 
   <form method="GET" action="/">
     <input type="text" name="q" placeholder="Etsi työvuoroja">
@@ -68,6 +73,12 @@
     </li>
   {% endfor %}
 </ul>
+
+{% else %}
+
+  <p>Kirjaudu sisään nähdäksesi työvuorot.</p>
+
+{% endif %}
 
 </body>
 

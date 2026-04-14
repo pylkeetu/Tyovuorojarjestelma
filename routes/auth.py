@@ -64,3 +64,22 @@ def logout():
     session.pop("employee_id", None)
     session.pop("username", None)
     return redirect("/")
+
+@auth_bp.route("/user/<int:user_id>")
+def user_page(user_id):
+
+    shifts = db.query(
+        "SELECT * FROM shifts WHERE employee_id = ?",
+        [user_id]
+    )
+
+    stats = db.query(
+        """SELECT 
+            COUNT(*) as count,
+            AVG(participants) as avg_participants
+        FROM shifts
+        WHERE employee_id = ?""",
+        [user_id]
+    )[0]
+
+    return render_template("user.html", shifts=shifts, stats=stats)
