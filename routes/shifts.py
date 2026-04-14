@@ -25,17 +25,34 @@ def index():
 @shifts_bp.route("/shift/<int:item_id>")
 def show_shift(item_id):
 
-    result = db.query("""
+    shift = db.query("""
         SELECT shifts.*, employees.username
         FROM shifts
         JOIN employees ON shifts.employee_id = employees.id
         WHERE shifts.id = ?
     """, [item_id])
 
-    if not result:
+    if not shift:
         return "Ei löydy", 404
 
-    return render_template("show_shift.html", shift=result[0])
+    shift = shift[0]
+
+    categories = db.query("""
+        SELECT categories.name
+        FROM categories
+        JOIN shift_categories ON categories.id = shift_categories.category_id
+        WHERE shift_categories.shift_id = ?
+    """, [item_id])
+
+    comments = db.query("""
+        SELECT comments.*, employees.username
+        FROM comments
+        JOIN employees ON comments.employee_id = employees.id
+        WHERE comments.shift_id = ?
+        ORDER BY comments.created_at DESC
+    """, [item_id])
+
+    return render_template("show_shift.html", shift=shift, categories=categories, comments=comments)
 
 @shifts_bp.route("/new_shift")
 def new_shift():
@@ -116,8 +133,33 @@ def delete(item_id):
 
     result = db.query("SELECT employee_id FROM shifts WHERE id = ?", [item_id])
 
+    if not result:
+        return "Ei löydy", 404
+
     if result[0][0] != session["employee_id"]:
         return "Ei oikeuksia", 403
+    
+    db.execute(
+        "DELETE FROM shift_categories WHERE shift_id = ?",
+        [item_id]
+    )
 
     db.execute("DELETE FROM shifts WHERE id = ?", [item_id])
+
     return redirect("/")
+
+@shifts_bp.route("/shift/<int:shift_id>/comment", methods=["POST"])
+def add_comment(shift_id):
+
+    if "employee_id" not in session:
+        return redirect("/login")
+
+    content = request.form["content"]
+    employee_id = session["employee_id"]
+
+    db.execute(
+        "INSERT INTO comments (content, employee_id, shift_id) VALUES (?, ?, ?)",
+        [content, employee_id, shift_id]
+    )
+
+    return redirect(f"/shift/{shift_id}")

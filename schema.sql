@@ -25,3 +25,13 @@ CREATE TABLE shift_categories (
     FOREIGN KEY (shift_id) REFERENCES shifts(id),
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
+
+CREATE TABLE comments (
+    id INTEGER PRIMARY KEY,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    employee_id INTEGER,
+    shift_id INTEGER,
+    FOREIGN KEY (employee_id) REFERENCES employees(id),
+    FOREIGN KEY (shift_id) REFERENCES shifts(id)
+);

@@ -11,5 +11,28 @@
     </button>
 </form>
 
+<h3>Kommentit</h3>
+
+<ul>
+{% for c in categories %}
+  <li>{{ c.name }}</li>
+{% endfor %}
+</ul>
+
+<ul>
+{% for comment in comments %}
+  <li>
+    <b>{{ comment.username }}</b>:
+    {{ comment.content }}
+    <small>({{ comment.created_at }})</small>
+  </li>
+{% endfor %}
+</ul>
+
+<form method="POST" action="/shift/{{ shift.id }}/comment">
+  <textarea name="content" required></textarea>
+  <button type="submit">Lisää kommentti</button>
+</form>
+
 <br><br>
 <a href="/">Takaisin etusivulle</a>

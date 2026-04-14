@@ -76,7 +76,7 @@ def user_page(user_id):
     stats = db.query(
         """SELECT 
             COUNT(*) as count,
-            AVG(participants) as avg_participants
+            COALESCE(AVG(participants), 0) as avg_participants
         FROM shifts
         WHERE employee_id = ?""",
         [user_id]
