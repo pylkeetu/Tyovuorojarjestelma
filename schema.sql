@@ -35,3 +35,8 @@ CREATE TABLE comments (
     FOREIGN KEY (employee_id) REFERENCES employees(id),
     FOREIGN KEY (shift_id) REFERENCES shifts(id)
 );
+
+INSERT INTO categories (name) VALUES ('Lajiharjoitus');
+INSERT INTO categories (name) VALUES ('Oheisharjoitus (Taito)');
+INSERT INTO categories (name) VALUES ('Oheisharjoitus (Fysiikka)');
+INSERT INTO categories (name) VALUES ('Videovalmennus');
