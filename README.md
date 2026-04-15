@@ -22,7 +22,7 @@ Asennusohjeet:
 - Luo virtuaaliympäristö: python -m venv venv
 - Aktivoi virtuaaliympäristö: venv\Scripts\activate (Windows)
 - Aktivoi virtuaaliympäristö: source venv/bin/activate (Mac/Linux)
-- Asenna riippuvuudet: pip install -r requirements.txt
+- Asenna riippuvuudet: pip install -r requirements.txt ja pip install flask-wtf
 
 Tietokannan luominen:
 
