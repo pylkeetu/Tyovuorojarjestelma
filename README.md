@@ -9,12 +9,10 @@ Alkuperäiset tavoitteet:
 - Käyttäjä pystyy valitsemaan työvuorolle yhden tai useamman luokittelun (esim. mikä työ on kyseessä, teema, kohderyhmä).
 - Käyttäjä pystyy kommentoimaan työvuoroja
 
-Lisättyjä tavotteita(tulossa myöhemmin):
-
-- Käyttäjän tulee pystyä valitsemaan vapaana olevia työvuoroja
-
 Tämänhetkinen tilanne:
-- Kaikki muut toiminnot löytyvät välipalautuksen 2 mukaisesti paitsi mahdollisuus etsiä tietokohteita hakusanalla tai muulla perusteella.
+- Kaikki toiminnot alkuperäisistä tavoitteista toteutuvat.
+- Tietoturvaa on lisätty CSRF-avulla ja myös niin, että vain kirjautuneena pääset näkemään enemmän tietoja. Käyttäjä pystyy myös muokkaamaan vain omia työvuorojaan.
+- Kategorioita pystyy tarkoituksella valitsemaan vain yhden. 
 
 Asennusohjeet:
 - Kloonaa repositorio: git clone https://github.com/pylkeetu/Tyovuorojarjestelma.git
