@@ -11,16 +11,16 @@
 
   <p>
     <label>Valitse kategoria (otsikko):</label><br>
-
-    <div style="max-height: 80px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; width: 250px;">
-      {% for category in categories %}
-        <label>
-          <input type="radio" name="category" value="{{ category.id }}" required>
-          {{ category.name }}
-        </label><br>
-      {% endfor %}
-    </div>
   </p>
+
+  <div style="max-height: 80px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; width: 250px;">
+    {% for category in categories %}
+      <label>
+        <input type="radio" name="category" value="{{ category.id }}" required>
+        {{ category.name }}
+      </label><br>
+    {% endfor %}
+  </div>
 
   <p>
     Kuvaus (max 100 merkkiä): <br />
