@@ -10,9 +10,11 @@ Alkuperäiset tavoitteet:
 - Käyttäjä pystyy kommentoimaan työvuoroja
 
 Tämänhetkinen tilanne:
-- Kaikki toiminnot alkuperäisistä tavoitteista toteutuvat.
-- Tietoturvaa on lisätty CSRF-avulla ja myös niin, että vain kirjautuneena pääset näkemään enemmän tietoja. Käyttäjä pystyy myös muokkaamaan vain omia työvuorojaan.
-- Kategorioita pystyy tarkoituksella valitsemaan vain yhden. 
+- Struktuuri pidetty samana, mutta idea muutettu, jotta työ vastaisi enemmän vaatimuksia. Valmennuskäyttöön suunniteltu työvuorojärjestelmä muuttui treeni-alustaksi nimeltä treeniryhmä.
+- Sovellukseen pystyy lisäämään treenejä, joihin muilla käyttäjillä on mahdollisuus osallistua.
+- Harjoituksia pystyy myös kommentoimaan eli antamaan palautetta, tai kysymään kysymyksiä ennen tai jälkeen harjoituksen.
+- Käyttäjillä on myös oma sivu, jossa näkyy tilastoja: Lisätyt treenit, osallistujien keskiarvo, sekä muiden treeneihin osallistumiset.
+- Seuraavaksi on tarkoituksena lisätä mahdollisuus myös poistaa ilmoittautuminen, sekä muokata käyttöliittymä siistimmäksi. 
 
 Asennusohjeet:
 - Kloonaa repositorio: git clone https://github.com/pylkeetu/Tyovuorojarjestelma.git
@@ -20,7 +22,7 @@ Asennusohjeet:
 - Luo virtuaaliympäristö: python -m venv venv
 - Aktivoi virtuaaliympäristö: venv\Scripts\activate (Windows)
 - Aktivoi virtuaaliympäristö: source venv/bin/activate (Mac/Linux)
-- Asenna riippuvuudet: pip install -r requirements.txt ja pip install flask-wtf
+- Asenna riippuvuudet: pip install -r requirements.txt
 
 Tietokannan luominen:
 
