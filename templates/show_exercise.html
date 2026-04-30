@@ -29,14 +29,20 @@
 
 <h3>Osallistu treeniin</h3>
 
-  {% if not is_participant %}
-    <form method="POST" action="/exercise/{{ exercise.id }}/join">
-      <button type="submit">Osallistu</button>
-    </form>
-  {% else %}
-    <p>✔ Olet jo mukana tässä treenissä</p>
-  {% endif %}
+{% if is_participant %}
+  <p>✔ Olet jo mukana tässä treenissä</p>
+  <form method="POST" action="/exercise/{{ exercise.id }}/leave">
+    <button type="submit">Peruuta ilmoittautuminen</button>
+  </form>
 
+{% elif is_full %}
+  <p>Ryhmä on täynnä</p>
+
+{% else %}
+  <form method="POST" action="/exercise/{{ exercise.id }}/join">
+    <button type="submit">Osallistu</button>
+  </form>
+{% endif %}
 {% endif %}
 
 <hr>

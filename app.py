@@ -160,15 +160,15 @@ def index():
 
 # EXERCISE PAGE
 
-@app.route("/exercise/<int:item_id>")
-def show_exercise(item_id):
+@app.route("/exercise/<int:exercise_id>")
+def show_exercise(exercise_id):
 
     exercise = db.query("""
         SELECT exercises.*, users.username
         FROM exercises
         JOIN users ON exercises.user_id = users.id
         WHERE exercises.id = ?
-    """, [item_id])
+    """, [exercise_id])
 
     if not exercise:
         abort(404)
@@ -181,7 +181,7 @@ def show_exercise(item_id):
         JOIN exercise_categories
         ON categories.id = exercise_categories.category_id
         WHERE exercise_categories.exercise_id = ?
-    """, [item_id]) or []
+    """, [exercise_id]) or []
 
     comments = db.query("""
         SELECT comments.*, users.username
@@ -189,14 +189,14 @@ def show_exercise(item_id):
         JOIN users ON comments.user_id = users.id
         WHERE comments.exercise_id = ?
         ORDER BY comments.id DESC
-    """, [item_id]) or []
+    """, [exercise_id]) or []
 
     participants = db.query("""
         SELECT users.username
         FROM exercise_participants
         JOIN users ON users.id = exercise_participants.user_id
         WHERE exercise_participants.exercise_id = ?
-    """, [item_id]) or []
+    """, [exercise_id]) or []
 
 
     user_id = session.get("user_id")
@@ -207,9 +207,17 @@ def show_exercise(item_id):
         result = db.query("""
             SELECT 1 FROM exercise_participants
             WHERE exercise_id = ? AND user_id = ?
-        """, [item_id, user_id])
+        """, [exercise_id, user_id])
 
         is_participant = len(result) > 0
+    
+    participants_count = db.query("""
+        SELECT COUNT(*) AS count
+        FROM exercise_participants
+        WHERE exercise_id = ?
+        """, [exercise_id])[0]["count"]
+
+    is_full = participants_count >= exercise["max_participants"]
 
     return render_template(
         "show_exercise.html",
@@ -217,7 +225,8 @@ def show_exercise(item_id):
         categories=categories,
         comments=comments,
         participants=participants,
-        is_participant=is_participant
+        is_participant=is_participant,
+        is_full=is_full
     )
 
 # CREATE EXERCISE
@@ -263,13 +272,13 @@ def create_exercise():
 
 # EDIT EXERCISE
 
-@app.route("/exercise/<int:item_id>/edit", methods=["GET", "POST"])
-def edit_exercise(item_id):
+@app.route("/exercise/<int:exercise_id>/edit", methods=["GET", "POST"])
+def edit_exercise(exercise_id):
     require_login()
 
     exercise = db.query(
         "SELECT * FROM exercises WHERE id = ?",
-        [item_id]
+        [exercise_id]
     )
 
     if not exercise:
@@ -306,20 +315,20 @@ def edit_exercise(item_id):
         """UPDATE exercises
            SET title = ?, description = ?, max_participants = ?
            WHERE id = ?""",
-        [title, description, max_participants, item_id]
+        [title, description, max_participants, exercise_id]
     )
 
-    return redirect(f"/exercise/{item_id}")
+    return redirect(f"/exercise/{exercise_id}")
 
 # DELETE EXERCISE
 
-@app.route("/exercise/<int:item_id>/delete", methods=["POST"])
-def delete_exercise(item_id):
+@app.route("/exercise/<int:exercise_id>/delete", methods=["POST"])
+def delete_exercise(exercise_id):
     require_login()
     check_csrf()
 
-    db.execute("DELETE FROM exercise_categories WHERE exercise_id = ?", [item_id])
-    db.execute("DELETE FROM exercises WHERE id = ?", [item_id])
+    db.execute("DELETE FROM exercise_categories WHERE exercise_id = ?", [exercise_id])
+    db.execute("DELETE FROM exercises WHERE id = ?", [exercise_id])
 
     return redirect("/")
 
@@ -343,7 +352,7 @@ def add_comment(exercise_id):
 
     return redirect(f"/exercise/{exercise_id}")
 
-# JOIN EXERCISE
+# JOIN OR LEAVE EXERCISE
 
 @app.route("/exercise/<int:exercise_id>/join", methods=["POST"])
 def join_exercise(exercise_id):
@@ -352,11 +361,20 @@ def join_exercise(exercise_id):
     user_id = session["user_id"]
 
     exercise = db.query(
-        "SELECT user_id FROM exercises WHERE id = ?",
+        "SELECT user_id, max_participants FROM exercises WHERE id = ?",
         [exercise_id]
     )[0]
 
     if exercise["user_id"] == user_id:
+        abort(403)
+
+    participants = db.query("""
+        SELECT COUNT(*) AS count
+        FROM exercise_participants
+        WHERE exercise_id = ?
+    """, [exercise_id])[0]["count"]
+
+    if participants >= exercise["max_participants"]:
         abort(403)
 
     existing = db.query("""
@@ -369,6 +387,19 @@ def join_exercise(exercise_id):
             INSERT INTO exercise_participants (exercise_id, user_id)
             VALUES (?, ?)
         """, [exercise_id, user_id])
+
+    return redirect(f"/exercise/{exercise_id}")
+
+@app.route("/exercise/<int:exercise_id>/leave", methods=["POST"])
+def leave_exercise(exercise_id):
+    require_login()
+
+    user_id = session["user_id"]
+
+    db.execute("""
+        DELETE FROM exercise_participants
+        WHERE exercise_id = ? AND user_id = ?
+    """, [exercise_id, user_id])
 
     return redirect(f"/exercise/{exercise_id}")
 
