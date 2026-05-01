@@ -40,6 +40,7 @@
   <p class="ok">✔ Olet jo mukana tässä treenissä</p>
 
   <form method="POST" action="/exercise/{{ exercise.id }}/leave">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <button type="submit">Peruuta ilmoittautuminen</button>
   </form>
 
@@ -48,6 +49,7 @@
 
 {% else %}
   <form method="POST" action="/exercise/{{ exercise.id }}/join">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <button type="submit">Osallistu</button>
   </form>
 {% endif %}

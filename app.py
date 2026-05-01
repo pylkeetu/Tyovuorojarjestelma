@@ -149,13 +149,25 @@ def user_page(user_id):
 
 @app.route("/")
 def index():
-    exercises = db.query("SELECT * FROM exercises ORDER BY id DESC")
+
+    q = request.args.get("q")
+
+    if q:
+        exercises = db.query("""
+            SELECT * FROM exercises
+            WHERE title LIKE ? OR description LIKE ?
+            ORDER BY id DESC
+        """, [f"%{q}%", f"%{q}%"])
+    else:
+        exercises = db.query("SELECT * FROM exercises ORDER BY id DESC")
+
     users = db.query("SELECT * FROM users ORDER BY username")
 
     return render_template(
         "index.html",
         exercises=exercises,
-        users=users
+        users=users,
+        q=q
     )
 
 # EXERCISE PAGE
@@ -369,6 +381,7 @@ def add_comment(exercise_id):
 @app.route("/exercise/<int:exercise_id>/join", methods=["POST"])
 def join_exercise(exercise_id):
     require_login()
+    check_csrf()
 
     user_id = session["user_id"]
 
@@ -405,6 +418,7 @@ def join_exercise(exercise_id):
 @app.route("/exercise/<int:exercise_id>/leave", methods=["POST"])
 def leave_exercise(exercise_id):
     require_login()
+    check_csrf()
 
     user_id = session["user_id"]
 
