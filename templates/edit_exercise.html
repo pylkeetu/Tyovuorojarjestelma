@@ -7,17 +7,18 @@
 <h1>Muokkaa treeniä</h1>
 
 <form action="/exercise/{{ exercise['id'] }}/edit" method="POST">
+
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
-  <label>Treeni (kategoria / otsikko):</label><br>
+  <label>Kategoria:</label><br>
 
-  <div style="max-height: 120px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; width: 300px;">
+  <div class="category-box">
     {% for category in categories %}
-      <label style="display:block; margin-bottom:5px;">
+      <label class="category-item">
         <input type="radio"
                name="category"
                value="{{ category.id }}"
-               {% if category.name == exercise['title'] %}checked{% endif %}
+               {% if category.id == exercise['category_id'] %}checked{% endif %}
                required>
         {{ category.name }}
       </label>
@@ -29,7 +30,7 @@
   <label>Kuvaus:</label><br>
   <textarea name="description"
             rows="5"
-            maxlength="100"
+            maxlength="80"
             required>{{ exercise['description'] }}</textarea>
 
   <br><br>

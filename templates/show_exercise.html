@@ -1,9 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{{ exercise.title }}{% endblock %}
+
+{% block content %}
+
 <h1>{{ exercise.title }}</h1>
 
 <p>{{ exercise.description }}</p>
 
 <p><b>Treenin luoja:</b> {{ exercise.username }}</p>
-<p><b>Ilmoitettu maksimiosallistujamäärä:</b> {{ exercise.max_participants }}</p>
+<p><b>Max osallistujat:</b> {{ exercise.max_participants }}</p>
 
 <hr>
 
@@ -13,14 +19,15 @@
   <p>Ei osallistujia vielä</p>
 {% else %}
   <ul>
-  {% for p in participants %}
-    <li>{{ p.username }}</li>
-  {% endfor %}
+    {% for p in participants %}
+      <li>{{ p.username }}</li>
+    {% endfor %}
   </ul>
 {% endif %}
 
 <p>
-  <b>Osallistujat:</b> {{ participants|length }} / {{ exercise.max_participants }}
+  <b>Osallistujat:</b>
+  {{ participants|length }} / {{ exercise.max_participants }}
 </p>
 
 {% if session.user_id and session.user_id != exercise.user_id %}
@@ -30,19 +37,21 @@
 <h3>Osallistu treeniin</h3>
 
 {% if is_participant %}
-  <p>✔ Olet jo mukana tässä treenissä</p>
+  <p class="ok">✔ Olet jo mukana tässä treenissä</p>
+
   <form method="POST" action="/exercise/{{ exercise.id }}/leave">
     <button type="submit">Peruuta ilmoittautuminen</button>
   </form>
 
 {% elif is_full %}
-  <p>Ryhmä on täynnä</p>
+  <p class="full">Ryhmä on täynnä</p>
 
 {% else %}
   <form method="POST" action="/exercise/{{ exercise.id }}/join">
     <button type="submit">Osallistu</button>
   </form>
 {% endif %}
+
 {% endif %}
 
 <hr>
@@ -64,10 +73,13 @@
 </ul>
 
 <form method="POST" action="/exercise/{{ exercise.id }}/comment">
+
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
   <textarea name="content" maxlength="100" required></textarea>
+
   <button type="submit">Lisää kommentti</button>
+
 </form>
 
 {% if session.user_id and session.user_id == exercise.user_id %}
@@ -76,27 +88,27 @@
 
 <h3>Hallinta</h3>
 
-<div style="display:flex; gap:10px;">
+<div class="admin-actions">
 
   <form action="/exercise/{{ exercise.id }}/edit" method="GET">
-    <button type="submit"
-            style="cursor:pointer;">
-      Muokkaa
-    </button>
+    <button type="submit">Muokkaa</button>
   </form>
 
   <form action="/exercise/{{ exercise.id }}/delete" method="POST">
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
     <button type="submit"
-            onclick="return confirm('Haluatko varmasti poistaa tämän treenin?')"
-            style="cursor:pointer;">
+            onclick="return confirm('Haluatko varmasti poistaa tämän treenin?')">
       Poista
     </button>
   </form>
-{% endif %}
+
 </div>
 
-<br><br>
+{% endif %}
 
-<a href="/">Takaisin etusivulle</a>
+<br>
+
+<a href="/">← Takaisin etusivulle</a>
+
+{% endblock %}

@@ -4,28 +4,33 @@
 
 {% block content %}
 
+<h2>Luo tunnus</h2>
+
 <form action="/register" method="post">
+
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
   <p>
-    Tunnus: <br />
-    <input type="text" name="username" required />
+    Tunnus:<br>
+    <input type="text" name="username" required>
   </p>
 
   <p>
-    Salasana: <br />
-    <input type="password" name="password1" required />
+    Salasana:<br>
+    <input type="password" name="password1" required>
   </p>
 
   <p>
-    Salasana uudestaan: <br />
-    <input type="password" name="password2" required />
+    Salasana uudestaan:<br>
+    <input type="password" name="password2" required>
   </p>
 
-  <input type="submit" value="Luo tunnus" />
+  <button type="submit">Luo tunnus</button>
+
 </form>
 
 <br>
-<a href="/">Takaisin etusivulle</a>
+
+<a href="/">← Takaisin etusivulle</a>
 
 {% endblock %}

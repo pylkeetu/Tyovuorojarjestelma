@@ -4,33 +4,11 @@
 
 {% block content %}
 
-<h1>Treeniryhmä</h1>
-
 {% if session.username %}
-  <p>
-    Olet kirjautunut nimellä <b>{{ session.username }}</b>,
-    ID: {{ session.user_id }}
-  </p>
-
-  <a href="/user/{{ session.user_id }}">Oma sivu</a>
-{% endif %}
-
-<p>
-{% if session.username %}
-  <a href="/logout">Kirjaudu ulos</a>
-{% else %}
-  <a href="/login">Kirjaudu sisään</a>
-  <a href="/register">Luo tunnus</a>
-{% endif %}
-</p>
-
-{% if session.username %}
-  <p>
-    <a href="/new_exercise">Luo uusi treeni</a>
+  <p class="welcome-text">
+    Tervetuloa <b>{{ session.username }}</b>!
   </p>
 {% endif %}
-
-<hr>
 
 <h2>Treeni-ilmoitukset</h2>
 
@@ -41,8 +19,6 @@
   <button type="submit">Hae</button>
 </form>
 
-<br>
-
 <ul>
 {% for exercise in exercises %}
   <li>
@@ -52,40 +28,21 @@
     – {{ exercise['description'] }}
 
     {% if session.user_id == exercise['user_id'] %}
-
-      <form action="/exercise/{{ exercise['id'] }}/edit"
-            method="GET"
-            style="display:inline">
-
-        <button type="submit">
-          Muokkaa
-        </button>
+      <form action="/exercise/{{ exercise['id'] }}/edit" method="GET" style="display:inline">
+        <button type="submit">Muokkaa</button>
       </form>
 
-      <form action="/exercise/{{ exercise['id'] }}/delete"
-            method="POST"
-            style="display:inline">
-
+      <form action="/exercise/{{ exercise['id'] }}/delete" method="POST" style="display:inline">
         <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-
         <button type="submit"
                 onclick="return confirm('Haluatko varmasti poistaa tämän treenin?')">
           Poista
         </button>
       </form>
-
     {% endif %}
   </li>
 {% endfor %}
 </ul>
-
-{% else %}
-
-<p>Kirjaudu sisään nähdäksesi treenit.</p>
-
-{% endif %}
-
-{% if session.username %}
 
 <h3>Käyttäjät</h3>
 
@@ -99,6 +56,8 @@
 {% endfor %}
 </ul>
 
+{% else %}
+  <p>Kirjaudu sisään nähdäksesi treenit.</p>
 {% endif %}
 
 {% endblock %}

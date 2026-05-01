@@ -1,0 +1,93 @@
+body {
+  margin: 0 auto;
+  max-width: 50em;
+  font-family: sans-serif;
+  background-color: rgb(245, 247, 251);
+  color: rgb(28, 28, 28);
+  padding: 0 1em;
+  box-sizing: border-box;
+}
+
+.header {
+  background-color: rgb(31, 42, 68);
+  padding: 1em;
+  margin: 0.5em 0;
+  text-align: center;
+  color: white;
+}
+
+.nav {
+  background-color: rgb(31, 42, 68);
+  padding: 0.5em;
+  margin: 0.5em 0;
+  text-align: center;
+}
+
+.nav a {
+  margin-right: 10px;
+  text-decoration: none;
+  color: rgb(47, 128, 237);
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+.content {
+  background-color: white;
+  padding: 1em;
+  margin: 0.5em 0;
+}
+
+.full {
+  color: rgb(214, 69, 69);
+}
+
+.ok {
+  color: rgb(46, 125, 50);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+input {
+  padding: 5px;
+  margin-top: 3px;
+}
+
+button {
+  margin-left: 5px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.category-box {
+  max-height: 120px;
+  overflow-y: auto;
+  border: 1px solid rgb(200, 200, 200);
+  padding: 10px;
+  width: 300px;
+  background-color: white;
+}
+
+.category-item {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 10px;
+}
+
+textarea {
+  width: 100%;
+  max-width: 400px;
+  padding: 5px;
+}

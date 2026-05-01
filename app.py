@@ -327,9 +327,21 @@ def delete_exercise(exercise_id):
     require_login()
     check_csrf()
 
+    exercise = db.query(
+        "SELECT user_id FROM exercises WHERE id = ?",
+        [exercise_id]
+    )
+
+    if not exercise:
+        abort(404)
+
+    if exercise[0]["user_id"] != session["user_id"]:
+        abort(403)
+
     db.execute("DELETE FROM exercise_categories WHERE exercise_id = ?", [exercise_id])
     db.execute("DELETE FROM exercises WHERE id = ?", [exercise_id])
 
+    flash("Treeni poistettu onnistuneesti", "ok")
     return redirect("/")
 
 # COMMENT EXERCISE
